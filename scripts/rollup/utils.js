@@ -13,7 +13,7 @@ export function getPkgPath(name) {
 		resolvePath(`dist/node_modules/${name}`)
 	];
 	function resolvePath(p) {
-		return path.join(__dirname, `../../${p}`);
+		return path.resolve(__dirname, `../../${p}`);
 	}
 }
 
