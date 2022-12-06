@@ -51,7 +51,7 @@ export const completeWork = (wip: FiberNode) => {
 };
 
 function appendAllChildren(parent: Container, wip: FiberNode) {
-	let node = wip;
+	let node = wip.child;
 	while (node !== null) {
 		if (node.tag === HostComponent || node.tag === HostText) {
 			appendInitialChild(parent, node.stateNode);

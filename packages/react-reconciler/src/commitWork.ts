@@ -32,10 +32,10 @@ export function commitMutationEffects(finishedWork: FiberNode) {
 
 function commitMutationEffectsOnFiber(finishedWork: FiberNode) {
 	const flags = finishedWork.flags;
-	if ((flags & Placement) !== NoFlags) {
+	if (flags & Placement) {
 		commitPlacement(finishedWork);
-		// TODO: i don't know what happen
-		finishedWork.flags &= ~Placement;
+		// finishedWork.flags &= ~Placement;
+		finishedWork.flags ^= Placement;
 	}
 	// TODO: flags Update
 	// TODO: flags ChildrenDeletion

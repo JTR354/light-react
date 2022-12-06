@@ -33,7 +33,7 @@ export const appendInitialChild = (
 	parent: Instance | Container,
 	child: Instance
 ) => {
-	child && parent.appendChild(child);
+	parent.appendChild(child);
 };
 
 export const createTextInstance = (content: string) => {
