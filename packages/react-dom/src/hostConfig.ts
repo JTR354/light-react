@@ -41,3 +41,5 @@ export const createTextInstance = (content: string) => {
 };
 
 export const appendChildToContainer = appendInitialChild;
+
+// console.log(123);
