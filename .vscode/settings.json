@@ -1,7 +1,7 @@
 {
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"cSpell.words": ["commitlint"],
+	"cSpell.words": ["commitlint", "gitee"],
 	"[javascript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	}
