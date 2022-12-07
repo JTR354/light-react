@@ -9,7 +9,8 @@
 		"build:dev": "rimraf dist && rollup --bundleConfigAsCjs --config scripts/rollup/react.config.js",
 		"demo": "vite serve demo/test-hello --config scripts/vite/vite.config.js --force",
 		"push:github": "git push origin",
-		"push:gitee": "git push gitee"
+		"push:gitee": "git push gitee",
+		"push": "pnpm push:github && pnpm push:gitee"
 	},
 	"keywords": [],
 	"author": "",
