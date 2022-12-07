@@ -6,7 +6,10 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "eslint --ext .js,.ts,.jsx,.tsx,.json --fix --quiet ./packages",
-		"build:dev": "rimraf dist && rollup --bundleConfigAsCjs --config scripts/rollup/dev.config.js"
+		"build:dev": "rimraf dist && rollup --bundleConfigAsCjs --config scripts/rollup/dev.config.js",
+		"push:github": "git push origin",
+		"push:gitee": "git push gitee",
+		"push": "pnpm push:github && pnpm push:gitee"
 	},
 	"keywords": [],
 	"author": "",
