@@ -11,3 +11,5 @@ export interface ReactElementType {
 	props: Props;
 	__mark: string;
 }
+
+export type Action<S> = S | ((state: S) => S);

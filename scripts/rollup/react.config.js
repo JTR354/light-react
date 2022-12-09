@@ -6,7 +6,7 @@ import generatePackageJson from 'rollup-plugin-generate-package-json';
 const { module, name } = getPkgPackageJson('react');
 const [inputPath, outputPath] = getPkgPath(name);
 
-export default () => [
+export default [
 	{
 		input: `${inputPath}/${module}`,
 		output: { file: `${outputPath}/index.js`, format: 'umd', name: 'index.js' },
