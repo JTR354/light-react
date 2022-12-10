@@ -10,7 +10,7 @@
 		"push:github": "git push origin",
 		"push:gitee": "git push gitee",
 		"push": "pnpm push:github && pnpm push:gitee",
-		"demo": "vite serve demos/test-hello --config scripts/vite/vite.config.js --force"
+		"demo": "vite serve demos/test-ts --config scripts/vite/vite.config.js --force"
 	},
 	"keywords": [],
 	"author": "",

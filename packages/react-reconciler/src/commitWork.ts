@@ -86,10 +86,10 @@ function appendPlacementNodeIntoContainer(
 	}
 	const child = finishedWork.child;
 	if (child !== null) {
-		appendChildToContainer(hostParent, child.stateNode);
+		appendPlacementNodeIntoContainer(child, hostParent);
 		let sibling = child.sibling;
 		while (sibling) {
-			appendChildToContainer(hostParent, sibling.stateNode);
+			appendPlacementNodeIntoContainer(sibling, hostParent);
 			sibling = sibling.sibling;
 		}
 	}
