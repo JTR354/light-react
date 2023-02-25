@@ -4,6 +4,9 @@ specifiers:
   '@commitlint/cli': ^17.4.4
   '@commitlint/config-conventional': ^17.4.4
   '@rollup/plugin-commonjs': ^24.0.1
+  '@rollup/plugin-typescript': ^11.0.0
+  '@types/node': ^18.14.1
+  '@types/rollup-plugin-generate-package-json': ^3.2.0
   '@typescript-eslint/eslint-plugin': ^5.53.0
   '@typescript-eslint/parser': ^5.53.0
   commitlint: ^17.4.4
@@ -22,6 +25,9 @@ devDependencies:
   '@commitlint/cli': 17.4.4
   '@commitlint/config-conventional': 17.4.4
   '@rollup/plugin-commonjs': 24.0.1_rollup@3.17.2
+  '@rollup/plugin-typescript': 11.0.0_vi3xdhr63abcxdtwtptol35g5u
+  '@types/node': 18.14.1
+  '@types/rollup-plugin-generate-package-json': 3.2.0
   '@typescript-eslint/eslint-plugin': 5.53.0_ny4s7qc6yg74faf3d6xty2ofzy
   '@typescript-eslint/parser': 5.53.0_7kw3g6rralp5ps6mg3uyzz6azm
   commitlint: 17.4.4
@@ -326,6 +332,25 @@ packages:
       rollup: 3.17.2
     dev: true
 
+  /@rollup/plugin-typescript/11.0.0_vi3xdhr63abcxdtwtptol35g5u:
+    resolution: {integrity: sha512-goPyCWBiimk1iJgSTgsehFD5OOFHiAknrRJjqFCudcW8JtWiBlK284Xnn4flqMqg6YAjVG/EE+3aVzrL5qNSzQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.14.0||^3.0.0
+      tslib: '*'
+      typescript: '>=3.7.0'
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+      tslib:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.0.2_rollup@3.17.2
+      resolve: 1.22.1
+      rollup: 3.17.2
+      typescript: 4.9.5
+    dev: true
+
   /@rollup/pluginutils/4.2.1:
     resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
     engines: {node: '>= 8.0.0'}
@@ -383,6 +408,12 @@ packages:
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
+    dev: true
+
+  /@types/rollup-plugin-generate-package-json/3.2.0:
+    resolution: {integrity: sha512-jcTvXizVGFXmHTODFFLuSERbg1frsW6xmxwKYqmmi2EB5ViyKEm0eXpX1dQ2JPMw3u5f1R1ljwikA8UTQGEAUQ==}
+    dependencies:
+      rollup: 3.17.2
     dev: true
 
   /@types/semver/7.3.13:

@@ -2,24 +2,26 @@
 // dist 路径
 // base 插件
 
-import { DIST_PATH, getBasePlugins, getPkgJson, PKG_PATH } from './utils';
-
+import { getBasePlugins, getDistPath, getPkgJson, getPkgPath } from './utils';
 import generatePackageJson from 'rollup-plugin-generate-package-json';
+
 const { name, module } = getPkgJson('react');
+const sourcePath = getPkgPath(name);
+const distPath = getDistPath(name);
 
 export default [
 	{
-		input: `${PKG_PATH}/${name}/${module}`,
+		input: `${sourcePath}/${module}`,
 		output: {
-			file: `${DIST_PATH}/${name}/index.js`,
+			file: `${distPath}/index.js`,
 			name: 'react',
 			format: 'umd'
 		},
 		plugins: [
 			...getBasePlugins(),
 			generatePackageJson({
-				inputFolder: `${PKG_PATH}/${name}`,
-				outputFolder: `${DIST_PATH}/${name}`,
+				inputFolder: sourcePath,
+				outputFolder: distPath,
 				baseContents: ({ description, name, version }) => {
 					return {
 						name,
@@ -32,18 +34,18 @@ export default [
 		]
 	},
 	{
-		input: `${PKG_PATH}/${name}/src/jsx.ts`,
+		input: `${sourcePath}/src/jsx.ts`,
 		output: {
-			file: `${DIST_PATH}/${name}/jsx-runtime.js`,
+			file: `${distPath}/jsx-runtime.js`,
 			name: 'jsx-runtime',
 			format: 'umd'
 		},
 		plugins: getBasePlugins()
 	},
 	{
-		input: `${PKG_PATH}/${name}/src/jsx.ts`,
+		input: `${sourcePath}/src/jsx.ts`,
 		output: {
-			file: `${DIST_PATH}/${name}/jsx-dev-runtime.js`,
+			file: `${distPath}/jsx-dev-runtime.js`,
 			name: 'jsx-dev-runtime',
 			format: 'umd'
 		},
