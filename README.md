@@ -12,3 +12,17 @@
 - jsx
 - 打包生成 react，jsx-runtime,jsx-dev-runtime
 - 调试代码
+
+### 3. react-reconcile
+
+- fiberNode
+  - fiber
+  - workTags: 记录当前是什么类型的节点
+  - fiberFlags: 记录有哪些操作（副作用）
+- workLoop
+  - prepareFreshStack
+  - renderRoot
+  - performUnitOfWork
+  - beginWork
+  - completeUnitOfWork
+  - completeWork
