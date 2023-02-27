@@ -38,6 +38,15 @@ function renderRoot(root: FiberRootNode) {
 			}
 		}
 	}
+
+	const finishedWork = root.current.alternate;
+	root.finishedWork = finishedWork;
+
+	commitWork(root);
+}
+
+function commitWork(root: any) {
+	// Implement
 }
 
 function workLoop() {

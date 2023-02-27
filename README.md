@@ -59,3 +59,11 @@
   - reconcileSingleTextNode
   - createFiberFromElement
   - placeSingleChild
+
+### 5-2 complete-work
+
+- createInstance
+- createTextInstance
+- appendInitialChild
+- appendAllChildren
+- bubbleProperties
