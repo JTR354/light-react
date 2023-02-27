@@ -26,3 +26,10 @@
   - beginWork
   - completeUnitOfWork
   - completeWork
+
+### 4-1. update-queue
+
+- createUpdate
+- createUpdateQueue
+- enqueueUpdate
+- processUpdateQueue
