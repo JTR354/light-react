@@ -43,3 +43,19 @@
 - renderRoot
 - prepareFreshStack
 - createWorkInProcess
+
+### 5-1 begin-work
+
+- updateHostRoot
+- updateHostComponent
+- reconcileChildren
+- reconcileChildFibers
+
+- ChildFibers
+  - ChildReconciler
+  - reconcileChildFibers
+  - mountChildFibers
+  - reconcileSingleElement
+  - reconcileSingleTextNode
+  - createFiberFromElement
+  - placeSingleChild

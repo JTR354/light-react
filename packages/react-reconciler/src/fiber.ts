@@ -1,7 +1,7 @@
 import { Container } from 'hostConfig';
-import { Key, Props, Ref } from 'shared/ReactTypes';
+import { Key, Props, ReactElementType, Ref } from 'shared/ReactTypes';
 import { Flags, NoFlags } from './fiberFlags';
-import { WorkTag } from './workTags';
+import { FunctionComponent, WorkTag, HostComponent } from './workTags';
 
 export class FiberNode {
 	tag: WorkTag;
@@ -82,3 +82,18 @@ export const createWorkInProcess = (
 
 	return wip;
 };
+
+export function createFiberFromElement(element: ReactElementType): FiberNode {
+	let workTag: WorkTag = FunctionComponent;
+	const { type, props, key } = element;
+	if (type === 'string') {
+		workTag = HostComponent;
+	} else if (typeof type !== 'function') {
+		if (__DEV__) {
+			console.warn(`createFiberFromElement 为实现的类型`, element);
+		}
+	}
+	const fiber = new FiberNode(workTag, props, key);
+	fiber.type = type;
+	return fiber;
+}

@@ -15,6 +15,7 @@
 		"@commitlint/cli": "^17.4.4",
 		"@commitlint/config-conventional": "^17.4.4",
 		"@rollup/plugin-commonjs": "^24.0.1",
+		"@rollup/plugin-replace": "^5.0.2",
 		"@rollup/plugin-typescript": "^11.0.0",
 		"@types/node": "^18.14.1",
 		"@types/rollup-plugin-generate-package-json": "^3.2.0",

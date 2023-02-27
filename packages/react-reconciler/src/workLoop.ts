@@ -33,7 +33,9 @@ function renderRoot(root: FiberRootNode) {
 			break;
 		} catch (error) {
 			workInProcess = null;
-			console.log('workLoop error', error);
+			if (__DEV__) {
+				console.log('workLoop error', error);
+			}
 		}
 	}
 }
