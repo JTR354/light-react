@@ -3,6 +3,7 @@ import { beginWork } from './beginWork';
 import { completeWork } from './completeWork';
 import { createWorkInProcess, FiberNode, FiberRootNode } from './fiber';
 import { MutationMask } from './fiberFlags';
+import { commitMutationEffects } from './commitWork';
 
 let workInProcess: FiberNode | null = null;
 

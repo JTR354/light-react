@@ -41,7 +41,9 @@ function commitPlacement(finishedWork: FiberNode) {
 		console.warn('---placement begin---');
 	}
 	const hostParent = getHostParent(finishedWork);
-	hostParent && appendPlacementNodeIntoContainer(finishedWork, hostParent);
+	if (hostParent) {
+		appendPlacementNodeIntoContainer(finishedWork, hostParent);
+	}
 }
 
 function appendPlacementNodeIntoContainer(
@@ -55,10 +57,10 @@ function appendPlacementNodeIntoContainer(
 	} else {
 		const child = finishedWork.child;
 		if (child) {
-			appendPlacementNodeIntoContainer(hostParent, child);
+			appendPlacementNodeIntoContainer(child, hostParent);
 			let sibling = child.sibling;
 			while (sibling) {
-				appendPlacementNodeIntoContainer(hostParent, sibling);
+				appendPlacementNodeIntoContainer(sibling, hostParent);
 				sibling = sibling.sibling;
 			}
 		}
