@@ -12,7 +12,7 @@ export function scheduleUpdateOnFiber(fiber: FiberNode) {
 	renderRoot(root);
 }
 
-function markUpdateFromFiberToRoot(fiber: FiberNode) {
+function markUpdateFromFiberToRoot(fiber: FiberNode): FiberRootNode | null {
 	let node = fiber,
 		parent = fiber.return;
 
@@ -23,10 +23,14 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 	if (node.tag === HostRoot) {
 		return node.stateNode;
 	}
+	if (__DEV__) {
+		console.warn('markUpdateFromFiberToRoot 未找到root fiber', fiber);
+	}
 	return null;
 }
 
-function renderRoot(root: FiberRootNode) {
+function renderRoot(root: FiberRootNode | null) {
+	if (root === null) return;
 	prepareFreshStack(root);
 
 	while (true) {
