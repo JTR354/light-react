@@ -7,8 +7,11 @@ import { ReactElementType } from 'shared/ReactTypes';
 
 export function createRoot(container: Container) {
 	const root = createContainer(container);
-	return function render(element: ReactElementType) {
+	function render(element: ReactElementType) {
 		updateContainer(element, root);
 		return container;
+	}
+	return {
+		render
 	};
 }

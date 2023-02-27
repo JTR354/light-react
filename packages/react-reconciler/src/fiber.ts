@@ -89,7 +89,7 @@ export const createWorkInProcess = (
 export function createFiberFromElement(element: ReactElementType): FiberNode {
 	let workTag: WorkTag = FunctionComponent;
 	const { type, props, key } = element;
-	if (type === 'string') {
+	if (typeof type === 'string') {
 		workTag = HostComponent;
 	} else if (typeof type !== 'function') {
 		if (__DEV__) {
