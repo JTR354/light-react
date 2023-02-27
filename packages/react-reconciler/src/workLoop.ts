@@ -63,6 +63,7 @@ function commitWork(root: FiberRootNode) {
 		// beforeMutation
 		// mutation
 		// layout
+		commitMutationEffects(finishedWork);
 		root.current = finishedWork;
 	} else {
 		root.current = finishedWork;

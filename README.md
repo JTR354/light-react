@@ -67,3 +67,13 @@
 - appendInitialChild
 - appendAllChildren
 - bubbleProperties
+
+### 6-1 commit & mutation
+
+- commitRoot
+- commitMutationEffects
+- commitMutationEffectOnFiber
+- commitPlacement
+- getHostParent
+- appendPlacementNodeIntoContainer
+- appendChildToParent
