@@ -20,7 +20,7 @@ export function renderRoot(root: FiberNode) {
 
 function workLoop() {
 	// Implement
-	if (workInProcess !== null) {
+	while (workInProcess !== null) {
 		performanceUnitOfWork(workInProcess);
 	}
 }
