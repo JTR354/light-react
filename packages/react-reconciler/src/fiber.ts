@@ -1,7 +1,7 @@
 import { Container } from 'hostConfig';
 import { Key, Props, Ref } from 'shared/ReactTypes';
 import { Flags, NoFlags } from './fiberFlags';
-import { WorkTag, HostRoot } from './workTags';
+import { WorkTag } from './workTags';
 
 export class FiberNode {
 	tag: WorkTag;
@@ -23,7 +23,9 @@ export class FiberNode {
 		// 属性
 		this.tag = tag;
 		this.key = key;
+		// HostComponent <div></div>
 		this.stateNode = null;
+		// FunctionComponent () => {}
 		this.type = null;
 		this.ref = null;
 		// 树结构
