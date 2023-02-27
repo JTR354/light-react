@@ -1,10 +1,30 @@
+import { HostRoot } from './workTags';
 import { beginWork } from './beginWork';
 import { completeWork } from './completeWork';
-import { FiberNode } from './fiber';
+import { createWorkInProcess, FiberNode, FiberRootNode } from './fiber';
 
 let workInProcess: FiberNode | null = null;
 
-export function renderRoot(root: FiberNode) {
+export function scheduleUpdateOnFiber(fiber: FiberNode) {
+	const root = markUpdateFromFiberToRoot(fiber);
+	renderRoot(root);
+}
+
+function markUpdateFromFiberToRoot(fiber: FiberNode) {
+	let node = fiber,
+		parent = fiber.return;
+
+	while (parent !== null) {
+		node = parent;
+		parent = node.return;
+	}
+	if (node.tag === HostRoot) {
+		return node.stateNode;
+	}
+	return null;
+}
+
+function renderRoot(root: FiberRootNode) {
 	prepareFreshStack(root);
 
 	while (true) {
@@ -51,7 +71,7 @@ function completeUnitOfWork(fiber: FiberNode) {
 	} while (node !== null);
 }
 
-function prepareFreshStack(fiber: FiberNode) {
+function prepareFreshStack(root: FiberRootNode) {
 	// Implement
-	workInProcess = fiber;
+	workInProcess = createWorkInProcess(root.current, {});
 }

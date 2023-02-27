@@ -33,3 +33,13 @@
 - createUpdateQueue
 - enqueueUpdate
 - processUpdateQueue
+
+### 4-2 fiber-reconciler
+
+- createContainer
+- updateContainer
+- scheduleUpdateOnFiber
+- markUpdateFromFiberToRoot
+- renderRoot
+- prepareFreshStack
+- createWorkInProcess

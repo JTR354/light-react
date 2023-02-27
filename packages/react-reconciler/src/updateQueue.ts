@@ -1,9 +1,9 @@
 import { Action } from 'shared/ReactTypes';
 
-interface Update<State> {
+export interface Update<State> {
 	action: Action<State>;
 }
-interface UpdateQueue<State> {
+export interface UpdateQueue<State> {
 	shared: {
 		pending: Update<State> | null;
 	};
