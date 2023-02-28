@@ -38,7 +38,7 @@ function commitPlacement(finishedWork: FiberNode) {
 	// get parent
 	// insert
 	if (__DEV__) {
-		console.warn('---placement begin---');
+		console.warn('---placement begin---', finishedWork);
 	}
 	const hostParent = getHostParent(finishedWork);
 	if (hostParent) {

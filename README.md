@@ -77,3 +77,7 @@
 - getHostParent
 - appendPlacementNodeIntoContainer
 - appendChildToParent
+
+### 7-1 function-component
+
+- fiberHooks
