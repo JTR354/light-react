@@ -81,3 +81,18 @@
 ### 7-1 function-component
 
 - fiberHooks
+
+### 8-1 hooks
+
+- currentDispatcher
+- resolveDispatcher
+- SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
+- currentlyRenderingFiber
+- workInProcessHook
+
+### 8-2 useState
+
+- HooksDispatchOnMount
+- mountState
+- mountWorkInProcess
+- dispatchSetState

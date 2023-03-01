@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
 const App = () => {
@@ -9,7 +9,10 @@ const App = () => {
 	);
 };
 function Child() {
-	return <span id="1">hello wold</span>;
+	const [num, setNum] = useState(100);
+	//@ts-ignore
+	window.setNum = setNum;
+	return <span id="1">{num}</span>;
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
