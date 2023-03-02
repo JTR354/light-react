@@ -1,6 +1,7 @@
 {
 	"words": [
 		"commitlint",
-		"subdirs"
+		"subdirs",
+		"unpolyfilled"
 	]
 }

@@ -37,6 +37,9 @@ function ChildFibers(shouldTrackEffects: boolean) {
 		currentFiber: FiberNode | null,
 		newChild: ReactElementType
 	) {
+		if (newChild == null) {
+			return null;
+		}
 		if (newChild && typeof newChild === 'object') {
 			switch (newChild.$$typeof) {
 				case REACT_ELEMENT_TYPE:

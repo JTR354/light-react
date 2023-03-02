@@ -23,7 +23,8 @@ export const getPkgJson = (name: string) => {
 export const getBasePlugins = ({
 	typescript = {},
 	alias = {
-		__DEV__: true
+		__DEV__: true,
+		preventAssignment: true
 	}
 } = {}) => {
 	return [replace(alias), cjs, ts(typescript)];

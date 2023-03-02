@@ -14,7 +14,8 @@ export default [
 		input: `${sourcePath}/${module}`,
 		output: {
 			file: `${distPath}/index.js`,
-			name: 'react',
+			name: 'React',
+			exports: 'named',
 			format: 'umd'
 		},
 		plugins: [
@@ -36,6 +37,7 @@ export default [
 	{
 		input: `${sourcePath}/src/jsx.ts`,
 		output: {
+			exports: 'named',
 			file: `${distPath}/jsx-runtime.js`,
 			name: 'jsx-runtime',
 			format: 'umd'
@@ -45,6 +47,7 @@ export default [
 	{
 		input: `${sourcePath}/src/jsx.ts`,
 		output: {
+			exports: 'named',
 			file: `${distPath}/jsx-dev-runtime.js`,
 			name: 'jsx-dev-runtime',
 			format: 'umd'

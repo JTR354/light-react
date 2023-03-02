@@ -16,13 +16,20 @@ export default [
 		output: [
 			{
 				file: `${distPath}/index.js`,
-				name,
-				format: 'umd'
+				name: 'ReactDOM',
+				exports: 'named',
+				format: 'umd',
+				globals: {
+					react: 'React'
+				}
 			},
 			{
 				file: `${distPath}/client.js`,
-				name,
-				format: 'umd'
+				name: 'client',
+				format: 'umd',
+				globals: {
+					react: 'React'
+				}
 			}
 		],
 		external: [...Object.keys(peerDependencies)],
@@ -49,5 +56,20 @@ export default [
 				}
 			})
 		]
+	},
+	{
+		input: `${sourcePath}/test-utils.ts`,
+		output: [
+			{
+				file: `${distPath}/test-utils.js`,
+				name: 'test-utils',
+				format: 'umd',
+				globals: {
+					'react-dom': 'reactDom'
+				}
+			}
+		],
+		external: ['react', 'react-dom'],
+		plugins: [...getBasePlugins()]
 	}
 ];

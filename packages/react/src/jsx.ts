@@ -3,9 +3,9 @@ import { Key, Props, ReactElementType, Ref, Type } from 'shared/ReactTypes';
 
 export const ReactElement = (
 	type: Type,
-	key: Key,
-	ref: Ref,
-	props: Props
+	key: Key = null,
+	ref: Ref = null,
+	props: Props = {}
 ): ReactElementType => {
 	const element: ReactElementType = {
 		$$typeof: REACT_ELEMENT_TYPE,
@@ -19,32 +19,18 @@ export const ReactElement = (
 };
 
 export const jsx = (type: Type, config: any, ...maybeChildren: any[]) => {
-	let key, ref;
-	const props: { [key: string]: any } = {};
+	const {
+		props,
+		key,
+		ref
+	}: { props: { [key: string]: any }; key: any; ref: any } =
+		resolveConfig(config);
 
-	for (const prop in config) {
-		const val = config[prop];
-		if (prop === 'key') {
-			if (val !== undefined) {
-				props[prop] = String(val);
-			}
-			continue;
-		}
-		if (prop === 'ref') {
-			if (val !== undefined) {
-				props[prop] = val;
-			}
-			continue;
-		}
-		if ({}.hasOwnProperty.call(config, prop)) {
-			props[prop] = val;
-		}
-	}
 	if (Array.isArray(maybeChildren)) {
 		const childrenLength = maybeChildren?.length;
 		if (childrenLength === 1) {
 			props.children = maybeChildren[0];
-		} else {
+		} else if (childrenLength > 1) {
 			props.children = maybeChildren;
 		}
 	}
@@ -52,6 +38,17 @@ export const jsx = (type: Type, config: any, ...maybeChildren: any[]) => {
 };
 
 export const jsxDEV = (type: Type, config: any) => {
+	const {
+		props,
+		key,
+		ref
+	}: { props: { [key: string]: any }; key: any; ref: any } =
+		resolveConfig(config);
+
+	return ReactElement(type, key, ref, props);
+};
+
+function resolveConfig(config: any) {
 	let key, ref;
 	const props: { [key: string]: any } = {};
 
@@ -59,13 +56,13 @@ export const jsxDEV = (type: Type, config: any) => {
 		const val = config[prop];
 		if (prop === 'key') {
 			if (val !== undefined) {
-				props[prop] = String(val);
+				key = String(val);
 			}
 			continue;
 		}
 		if (prop === 'ref') {
 			if (val !== undefined) {
-				props[prop] = val;
+				ref = val;
 			}
 			continue;
 		}
@@ -73,13 +70,13 @@ export const jsxDEV = (type: Type, config: any) => {
 			props[prop] = val;
 		}
 	}
-	// if (Array.isArray(maybeChildren)) {
-	// 	const childrenLength = maybeChildren?.length;
-	// 	if (childrenLength === 1) {
-	// 		props.children = maybeChildren[0];
-	// 	} else {
-	// 		props.children = maybeChildren;
-	// 	}
-	// }
-	return ReactElement(type, key, ref, props);
-};
+	return { props, key, ref };
+}
+
+export function isValidElement(object: any) {
+	return (
+		object !== null &&
+		typeof object === 'object' &&
+		(object as ReactElementType).$$typeof === REACT_ELEMENT_TYPE
+	);
+}
