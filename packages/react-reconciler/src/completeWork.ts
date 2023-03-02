@@ -7,7 +7,7 @@ import {
 	HostRoot,
 	FunctionComponent
 } from './workTags';
-import { NoFlags } from './fiberFlags';
+import { NoFlags, Update } from './fiberFlags';
 // 递归中的归
 export function completeWork(wip: any): any {
 	const newProps = wip.pendingProps;
@@ -17,6 +17,22 @@ export function completeWork(wip: any): any {
 		case HostComponent:
 			if (current !== null && wip.stateNode) {
 				// update TODO
+				const oldProps = current.memorizedProps;
+				let isEqual = false;
+				host: if (
+					Object.keys(oldProps).length === Object.keys(newProps).length
+				) {
+					isEqual = true;
+					for (const key in oldProps) {
+						if (oldProps[key] !== newProps[key]) {
+							isEqual = false;
+							break host;
+						}
+					}
+				}
+				if (!isEqual) {
+					markUpdate(wip);
+				}
 			} else {
 				const instance = createInstance(wip.type, newProps);
 				appendAllChildren(instance, wip);
@@ -27,6 +43,11 @@ export function completeWork(wip: any): any {
 		case HostText:
 			if (current !== null && wip.stateNode) {
 				// update
+				const oldText = current.memorizedProps.content;
+				const newText = newProps.content;
+				if (oldText !== newText) {
+					markUpdate(wip);
+				}
 			} else {
 				const instance = createTextInstance(newProps.content);
 				wip.stateNode = instance;
@@ -46,6 +67,11 @@ export function completeWork(wip: any): any {
 			break;
 	}
 	return null;
+}
+
+function markUpdate(wip: FiberNode) {
+	// Implement
+	wip.flags |= Update;
 }
 
 function bubbleProperties(wip: FiberNode) {

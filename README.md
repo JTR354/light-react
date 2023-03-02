@@ -96,3 +96,9 @@
 - mountState
 - mountWorkInProcess
 - dispatchSetState
+
+### 10-1 update render
+
+- deletionChild
+- useFiber
+- markUpdate
