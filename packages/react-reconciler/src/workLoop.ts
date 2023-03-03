@@ -76,14 +76,12 @@ function commitWork(root: FiberRootNode) {
 }
 
 function workLoop() {
-	// Implement
 	while (workInProcess !== null) {
 		performanceUnitOfWork(workInProcess);
 	}
 }
 
 function performanceUnitOfWork(fiber: FiberNode) {
-	// Implement
 	const next = beginWork(fiber);
 	fiber.memorizedProps = fiber.pendingProps;
 	if (next !== null) {
@@ -94,7 +92,6 @@ function performanceUnitOfWork(fiber: FiberNode) {
 }
 
 function completeUnitOfWork(fiber: FiberNode) {
-	// Implement
 	let node: FiberNode | null = fiber;
 	do {
 		completeWork(node);
@@ -109,6 +106,5 @@ function completeUnitOfWork(fiber: FiberNode) {
 }
 
 function prepareFreshStack(root: FiberRootNode) {
-	// Implement
 	workInProcess = createWorkInProcess(root.current, {});
 }

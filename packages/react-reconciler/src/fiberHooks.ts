@@ -6,12 +6,14 @@ import {
 	createUpdate,
 	createUpdateQueue,
 	enqueueUpdate,
+	processUpdateQueue,
 	UpdateQueue
 } from './updateQueue';
 import { scheduleUpdateOnFiber } from './workLoop';
 
 let currentlyRendingFiber: FiberNode | null = null;
 let workInProcessHook: Hook | null = null;
+let currentHook: Hook | null = null;
 
 interface Hook {
 	memorizedState: any;
@@ -21,14 +23,15 @@ interface Hook {
 const { currentDispatcher } = internals;
 export function renderWithHooks(wip: FiberNode) {
 	currentlyRendingFiber = wip;
-	// 重置
-	workInProcessHook = null;
+	// // 重置
+	// workInProcessHook = null;
 	const current = wip.alternate;
 	if (current === null) {
 		// mount
 		currentDispatcher.current = HooksDispatchOnMount;
 	} else {
 		// update
+		currentDispatcher.current = HooksDispatchOnUpdate;
 	}
 
 	const Component = wip.type;
@@ -37,12 +40,67 @@ export function renderWithHooks(wip: FiberNode) {
 
 	// 重置
 	currentlyRendingFiber = null;
+	workInProcessHook = null;
+	currentHook = null;
 	return children;
 }
 
 const HooksDispatchOnMount: Dispatcher = {
 	useState: mountState
 };
+
+const HooksDispatchOnUpdate: Dispatcher = {
+	useState: updateState
+};
+
+function updateState<State>(): [State, Dispatch<State>] {
+	const hook = updateWorkInProcess();
+	const updateQueue = hook.updateQueue as UpdateQueue<State>;
+	const pending = updateQueue.shared.pending;
+	if (pending !== null) {
+		const { memorizedState } = processUpdateQueue(hook.memorizedState, pending);
+		hook.memorizedState = memorizedState;
+	}
+	return [hook.memorizedState, updateQueue.dispatch as Dispatch<State>];
+}
+
+function updateWorkInProcess(): Hook {
+	let nextCurrentHook: Hook | null = null;
+	if (currentHook === null) {
+		const current = currentlyRendingFiber?.alternate;
+		if (current !== null) {
+			nextCurrentHook = current?.memorizedState;
+		} else {
+			nextCurrentHook = null;
+		}
+	} else {
+		nextCurrentHook = currentHook.next;
+	}
+
+	if (nextCurrentHook === null) {
+		throw new Error('这次hook比上次多');
+	}
+
+	currentHook = nextCurrentHook;
+	const newHook: Hook = {
+		memorizedState: currentHook.memorizedState,
+		updateQueue: currentHook.updateQueue,
+		next: null
+	};
+
+	if (workInProcessHook === null) {
+		if (currentlyRendingFiber === null) {
+			throw new Error('请在react组件中使用hook');
+		}
+		workInProcessHook = newHook;
+		currentlyRendingFiber.memorizedState = workInProcessHook;
+	} else {
+		workInProcessHook.next = newHook;
+		workInProcessHook = newHook;
+	}
+
+	return workInProcessHook;
+}
 
 function mountState<State>(
 	initialState: State | (() => State)

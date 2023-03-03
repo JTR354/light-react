@@ -1,4 +1,3 @@
-import { HostText } from './workTags';
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
 import { Props, ReactElementType } from 'shared/ReactTypes';
 import {
@@ -7,6 +6,7 @@ import {
 	createFiberFromElement
 } from './fiber';
 import { ChildDeletion, Placement } from './fiberFlags';
+import { HostText } from './workTags';
 
 function ChildFibers(shouldTrackEffects: boolean) {
 	function deletionChild(returnFiber: FiberNode, childToDel: FiberNode) {
@@ -18,7 +18,6 @@ function ChildFibers(shouldTrackEffects: boolean) {
 		} else {
 			deletions.push(childToDel);
 		}
-		returnFiber.deletions = deletions;
 	}
 	function reconcileSingleElement(
 		returnFiber: FiberNode,
@@ -34,10 +33,9 @@ function ChildFibers(shouldTrackEffects: boolean) {
 				const existing = useFiber(currentFiber, element.props);
 				existing.return = returnFiber;
 				return existing;
-			} else {
-				// 删除
-				deletionChild(returnFiber, currentFiber);
 			}
+			// 删除
+			deletionChild(returnFiber, currentFiber);
 		}
 
 		const fiber = createFiberFromElement(element);
@@ -56,10 +54,9 @@ function ChildFibers(shouldTrackEffects: boolean) {
 				const existing = useFiber(currentFiber, { content });
 				existing.return = returnFiber;
 				return existing;
-			} else {
-				// 删除
-				deletionChild(returnFiber, currentFiber);
 			}
+			// 删除
+			deletionChild(returnFiber, currentFiber);
 		}
 		const fiber = new FiberNode(HostText, { content }, null);
 		fiber.return = returnFiber;
@@ -76,9 +73,6 @@ function ChildFibers(shouldTrackEffects: boolean) {
 		currentFiber: FiberNode | null,
 		newChild: ReactElementType
 	) {
-		if (newChild == null) {
-			return null;
-		}
 		if (newChild && typeof newChild === 'object') {
 			switch (newChild.$$typeof) {
 				case REACT_ELEMENT_TYPE:
@@ -94,7 +88,7 @@ function ChildFibers(shouldTrackEffects: boolean) {
 		}
 		if (typeof newChild === 'string' || typeof newChild === 'number') {
 			return placeSingleChild(
-				reconcileSingleTextNode(returnFiber, null, newChild)
+				reconcileSingleTextNode(returnFiber, currentFiber, newChild)
 			);
 		}
 

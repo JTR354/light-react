@@ -17,22 +17,22 @@ export function completeWork(wip: any): any {
 		case HostComponent:
 			if (current !== null && wip.stateNode) {
 				// update TODO
-				const oldProps = current.memorizedProps;
-				let isEqual = false;
-				host: if (
-					Object.keys(oldProps).length === Object.keys(newProps).length
-				) {
-					isEqual = true;
-					for (const key in oldProps) {
-						if (oldProps[key] !== newProps[key]) {
-							isEqual = false;
-							break host;
-						}
-					}
-				}
-				if (!isEqual) {
-					markUpdate(wip);
-				}
+				// const oldProps = current.memorizedProps;
+				// let isEqual = false;
+				// host: if (
+				// 	Object.keys(oldProps).length === Object.keys(newProps).length
+				// ) {
+				// 	isEqual = true;
+				// 	for (const key in oldProps) {
+				// 		if (oldProps[key] !== newProps[key]) {
+				// 			isEqual = false;
+				// 			break host;
+				// 		}
+				// 	}
+				// }
+				// if (!isEqual) {
+				// 	markUpdate(wip);
+				// }
 			} else {
 				const instance = createInstance(wip.type, newProps);
 				appendAllChildren(instance, wip);

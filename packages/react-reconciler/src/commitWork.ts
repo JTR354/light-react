@@ -1,7 +1,17 @@
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
 import { FiberNode, FiberRootNode } from './fiber';
-import { MutationMask, Placement } from './fiberFlags';
-import { appendChildToParent, Container } from 'hostConfig';
+import { ChildDeletion, MutationMask, Placement, Update } from './fiberFlags';
+import {
+	appendChildToParent,
+	commitUpdate,
+	Container,
+	removeChild
+} from 'hostConfig';
 
 let nextEffect: FiberNode | null = null;
 export function commitMutationEffects(finishedWork: FiberNode) {
@@ -31,7 +41,84 @@ function commitMutationOnFiber(finishedWork: FiberNode) {
 		finishedWork.flags ^= Placement;
 	}
 	// Update
+	if (flags & Update) {
+		commitUpdate(finishedWork);
+		finishedWork.flags ^= Update;
+	}
 	// ChildrenDeletion
+	if (flags & ChildDeletion) {
+		commitDeletion(finishedWork);
+		finishedWork.flags ^= ChildDeletion;
+	}
+}
+
+function commitDeletion(finishedWork: FiberNode) {
+	const { deletions } = finishedWork;
+	if (deletions === null) return;
+	if (__DEV__) {
+		console.warn('---ChildrenDeletion begin---', finishedWork);
+	}
+	deletions.forEach((childToDeletion: FiberNode) => {
+		let rootHostNode: FiberNode | null = null;
+		commitNestedComponent(childToDeletion, (unmountFiber) => {
+			// todo
+			switch (unmountFiber.tag) {
+				case HostComponent:
+					if (rootHostNode === null) {
+						rootHostNode = unmountFiber;
+					}
+					// todo 解绑ref
+					break;
+
+				case HostText:
+					if (rootHostNode === null) {
+						rootHostNode = unmountFiber;
+					}
+					break;
+				case FunctionComponent:
+					// useEffect unmount 解绑ref
+					break;
+				default:
+					if (__DEV__) {
+						console.warn(
+							commitNestedComponent.name + '未实现的类型',
+							unmountFiber
+						);
+					}
+					break;
+			}
+		});
+		if (rootHostNode !== null) {
+			const hostParent = getHostParent(childToDeletion);
+			if (hostParent !== null) {
+				removeChild(hostParent, (rootHostNode as FiberNode).stateNode);
+			}
+		}
+		childToDeletion.child = null;
+		childToDeletion.return = null;
+	});
+}
+
+function commitNestedComponent(
+	root: FiberNode,
+	onUnmount: (fiber: FiberNode) => void
+) {
+	let node = root;
+	while (true) {
+		onUnmount(node);
+		if (node.child !== null) {
+			node.child.return = node;
+			node = node.child;
+			continue;
+		}
+		if (node === root) return;
+		while (node.sibling === null) {
+			if (node.return === null || node.return === root) return;
+			node = node.return;
+		}
+		node.sibling.return = node.return;
+		node = node.sibling;
+	}
 }
 
 function commitPlacement(finishedWork: FiberNode) {
@@ -67,7 +154,7 @@ function appendPlacementNodeIntoContainer(
 	}
 }
 
-function getHostParent(fiber: FiberNode) {
+function getHostParent(fiber: FiberNode): Container | null {
 	let parent = fiber.return;
 	while (parent) {
 		const parentTag = parent.tag;
@@ -79,4 +166,5 @@ function getHostParent(fiber: FiberNode) {
 		parent = parent.return;
 	}
 	console.warn('未找到hostParent', fiber);
+	return null;
 }

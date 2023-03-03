@@ -102,3 +102,18 @@
 - deletionChild
 - useFiber
 - markUpdate
+
+### 10-2 update commit
+
+- commitUpdate
+- commitTextUpdate
+- commitDeletion
+- commitNestedComponent
+- removeChild
+
+### 10-3 update useState
+
+- HookDispatcherOnUpdate
+- updateState
+- updateWorkInProcess
+- currentHook
