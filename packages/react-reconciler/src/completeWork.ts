@@ -1,5 +1,9 @@
 import { FiberNode } from './fiber';
-import { createTextInstance, appendInitialChild } from 'hostConfig';
+import {
+	createTextInstance,
+	appendInitialChild,
+	updateFiberProps
+} from 'hostConfig';
 import { createInstance, Container } from 'hostConfig';
 import {
 	HostComponent,
@@ -16,6 +20,7 @@ export function completeWork(wip: any): any {
 	switch (wip.tag) {
 		case HostComponent:
 			if (current !== null && wip.stateNode) {
+				updateFiberProps(current.stateNode, newProps);
 				// update TODO
 				// const oldProps = current.memorizedProps;
 				// let isEqual = false;

@@ -117,3 +117,14 @@
 - updateState
 - updateWorkInProcess
 - currentHook
+
+### 11 synthetic-event
+
+- SyntheticEvent
+- updateFiberProps
+- initEvent
+- dispatchEvent
+- collectPaths
+- getEventCallbackFromEventType
+- createSyntheticEvent
+- triggerEventFlow
