@@ -128,3 +128,12 @@
 - getEventCallbackFromEventType
 - createSyntheticEvent
 - triggerEventFlow
+
+### 12 diff single
+
+- deleteRemainingChildren
+
+### 12-2 diff multiple
+
+- reconcileChildrenArray
+- updateFromMap
