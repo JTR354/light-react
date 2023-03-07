@@ -8,17 +8,24 @@ export type Instance = Element;
 export type InstanceText = Text;
 
 export { updateFiberProps };
-export const createInstance = (type: string, props: Props) => {
+export function createInstance(type: string, props: Props) {
 	const element = document.createElement(type) as unknown;
 	updateFiberProps(element as DOMElement, props);
 	return element as DOMElement;
-};
-export const createTextInstance = (content: string) => {
+}
+export function createTextInstance(content: string) {
 	return document.createTextNode(content);
-};
-export const appendInitialChild = (parent: Container, instance: Instance) => {
+}
+export function appendInitialChild(parent: Container, instance: Instance) {
 	parent.appendChild(instance);
-};
+}
+export function insertChildToContainer(
+	parent: Container,
+	child: Instance,
+	before: Instance
+) {
+	parent.insertBefore(child, before);
+}
 export const appendChildToParent = appendInitialChild;
 
 export function commitUpdate(fiber: FiberNode) {

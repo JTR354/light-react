@@ -137,3 +137,8 @@
 
 - reconcileChildrenArray
 - updateFromMap
+
+### 12-3 diff commit
+
+- getHostSibling
+- insertChildToContainer

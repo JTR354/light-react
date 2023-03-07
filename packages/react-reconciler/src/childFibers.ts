@@ -1,4 +1,3 @@
-import { REACT_ELEMENT_TYPE } from './../../shared/ReactSymbols';
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
 import { Props, ReactElementType } from 'shared/ReactTypes';
 import {
@@ -28,7 +27,7 @@ function ChildFibers(shouldTrackEffects: boolean) {
 
 		let firstNewFiber: FiberNode | null = null;
 		let lastNewFiber: FiberNode | null = null;
-		let lastPlaceIndex: number = 0;
+		let lastPlaceIndex = 0;
 		for (let i = 0; i < newChild.length; i++) {
 			const element = newChild[i];
 			// 2. 比对newChild 和 currentFiber
@@ -37,6 +36,9 @@ function ChildFibers(shouldTrackEffects: boolean) {
 			if (newFiber === null) continue;
 
 			// 3. 标记或移动
+			newFiber.index = i;
+			newFiber.return = returnFiber;
+
 			if (lastNewFiber === null) {
 				lastNewFiber = newFiber;
 				firstNewFiber = newFiber;
@@ -45,10 +47,9 @@ function ChildFibers(shouldTrackEffects: boolean) {
 				lastNewFiber = lastNewFiber.sibling;
 			}
 
-			if (!shouldTrackEffects) continue;
-
-			newFiber.index = i;
-			newFiber.return = returnFiber;
+			if (!shouldTrackEffects) {
+				continue;
+			}
 
 			const current = newFiber.alternate;
 			if (current !== null) {
@@ -112,7 +113,7 @@ function ChildFibers(shouldTrackEffects: boolean) {
 				return existing;
 			} else if (element.key === currentFiber.key) {
 				// key相同 type不同
-				deleteRemainingChildren(currentFiber, returnFiber);
+				deleteRemainingChildren(returnFiber, currentFiber);
 				break;
 			}
 			// 删除
@@ -171,7 +172,7 @@ function ChildFibers(shouldTrackEffects: boolean) {
 					if (__DEV__) {
 						console.warn('reconcileChildren object 类型未定义', newChild);
 					}
-					return null;
+					break;
 			}
 		}
 		if (typeof newChild === 'string' || typeof newChild === 'number') {
@@ -213,6 +214,7 @@ function updateFromMap(
 			case REACT_ELEMENT_TYPE:
 				if (before) {
 					if (before.type === element.type) {
+						existingChildren.delete(keyToUse);
 						return useFiber(before, element.props);
 					}
 				}
