@@ -36,13 +36,16 @@ function ChildFibers(shouldTrackEffects: boolean) {
 			if (newFiber === null) continue;
 
 			// 3. 标记或移动
+
 			newFiber.index = i;
 			newFiber.return = returnFiber;
 
 			if (lastNewFiber === null) {
 				lastNewFiber = newFiber;
+				// 标记链表的第一个元素
 				firstNewFiber = newFiber;
 			} else {
+				// 和sibling建立链接
 				lastNewFiber.sibling = newFiber;
 				lastNewFiber = lastNewFiber.sibling;
 			}
