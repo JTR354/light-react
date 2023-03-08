@@ -7,7 +7,7 @@ export interface Dispatcher {
 export type Dispatch<State> = (action: Action<State>) => void;
 
 export const currentDispatcher: { current: Dispatcher | null } = {
-	current: null
+	current: null,
 };
 
 export function resolveDispatcher() {

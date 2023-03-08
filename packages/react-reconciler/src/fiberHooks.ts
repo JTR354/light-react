@@ -7,7 +7,7 @@ import {
 	createUpdateQueue,
 	enqueueUpdate,
 	processUpdateQueue,
-	UpdateQueue
+	UpdateQueue,
 } from './updateQueue';
 import { scheduleUpdateOnFiber } from './workLoop';
 
@@ -46,11 +46,11 @@ export function renderWithHooks(wip: FiberNode) {
 }
 
 const HooksDispatchOnMount: Dispatcher = {
-	useState: mountState
+	useState: mountState,
 };
 
 const HooksDispatchOnUpdate: Dispatcher = {
-	useState: updateState
+	useState: updateState,
 };
 
 function updateState<State>(): [State, Dispatch<State>] {
@@ -85,7 +85,7 @@ function updateWorkInProcess(): Hook {
 	const newHook: Hook = {
 		memorizedState: currentHook.memorizedState,
 		updateQueue: currentHook.updateQueue,
-		next: null
+		next: null,
 	};
 
 	if (workInProcessHook === null) {
@@ -141,7 +141,7 @@ function mountWorkInProcess(): Hook {
 	const hook: Hook = {
 		next: null,
 		memorizedState: null,
-		updateQueue: null
+		updateQueue: null,
 	};
 	if (workInProcessHook === null) {
 		if (currentlyRendingFiber === null) {

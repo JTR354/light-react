@@ -13,16 +13,16 @@ export interface UpdateQueue<State> {
 
 export const createUpdate = <State>(action: Action<State>): Update<State> => {
 	return {
-		action
+		action,
 	};
 };
 
 export const createUpdateQueue = <State>(): UpdateQueue<State> => {
 	return {
 		shared: {
-			pending: null
+			pending: null,
 		},
-		dispatch: null
+		dispatch: null,
 	};
 };
 
@@ -38,7 +38,7 @@ export const processUpdateQueue = <State>(
 	pendingUpdate: Update<State> | null
 ): { memorizedState: State } => {
 	const result: ReturnType<typeof processUpdateQueue<State>> = {
-		memorizedState: baseState
+		memorizedState: baseState,
 	};
 	if (pendingUpdate !== null) {
 		const action = pendingUpdate.action;

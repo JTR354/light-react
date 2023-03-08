@@ -1,7 +1,7 @@
 import { Container } from 'hostConfig';
 import {
 	createContainer,
-	updateContainer
+	updateContainer,
 } from 'react-reconciler/src/fiberReconciler';
 import { ReactElementType } from 'shared/ReactTypes';
 import { initEvent } from './SyntheticEvent';
@@ -14,6 +14,6 @@ export function createRoot(container: Container) {
 		return element;
 	}
 	return {
-		render
+		render,
 	};
 }

@@ -89,7 +89,7 @@ function collectPaths(
 ): Paths {
 	const paths: Paths = {
 		capture: [],
-		bubble: []
+		bubble: [],
 	};
 	while (targetElement && targetElement !== container) {
 		const elementProps = targetElement[keyElementProps];
@@ -116,6 +116,6 @@ function collectPaths(
 
 function getEventCallbackFromEventType(eventType: string) {
 	return {
-		click: ['onClickCapture', 'onClick']
+		click: ['onClickCapture', 'onClick'],
 	}[eventType];
 }

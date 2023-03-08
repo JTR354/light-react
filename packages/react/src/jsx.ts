@@ -13,7 +13,7 @@ export const ReactElement = (
 		key,
 		ref,
 		props,
-		__mark__: 'leo'
+		__mark__: 'leo',
 	};
 	return element;
 };
@@ -22,7 +22,7 @@ export const jsx = (type: Type, config: any, ...maybeChildren: any[]) => {
 	const {
 		props,
 		key,
-		ref
+		ref,
 	}: { props: { [key: string]: any }; key: any; ref: any } =
 		resolveConfig(config);
 
@@ -41,7 +41,7 @@ export const jsxDEV = (type: Type, config: any, ...others: any) => {
 	const {
 		props,
 		key,
-		ref
+		ref,
 	}: { props: { [key: string]: any }; key: any; ref: any } = resolveConfig(
 		config,
 		others

@@ -2,14 +2,14 @@ import { FiberNode } from './fiber';
 import {
 	createTextInstance,
 	appendInitialChild,
-	updateFiberProps
+	updateFiberProps,
 } from 'hostConfig';
 import { createInstance, Container } from 'hostConfig';
 import {
 	HostComponent,
 	HostText,
 	HostRoot,
-	FunctionComponent
+	FunctionComponent,
 } from './workTags';
 import { NoFlags, Update } from './fiberFlags';
 // 递归中的归

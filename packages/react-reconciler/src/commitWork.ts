@@ -90,7 +90,7 @@ function commitDeletion(finishedWork: FiberNode) {
 					if (__DEV__) {
 						console.warn(
 							commitNestedComponent.name + '未实现的类型',
-							unmountFiber,
+							unmountFiber
 						);
 					}
 					break;
@@ -109,7 +109,7 @@ function commitDeletion(finishedWork: FiberNode) {
 
 function commitNestedComponent(
 	root: FiberNode,
-	onUnmount: (fiber: FiberNode) => void,
+	onUnmount: (fiber: FiberNode) => void
 ) {
 	let node = root;
 	while (true) {
@@ -144,7 +144,7 @@ function commitPlacement(finishedWork: FiberNode) {
 		insertOrAppendPlacementNodeIntoContainer(
 			finishedWork,
 			hostParent,
-			hostSibling,
+			hostSibling
 		);
 	}
 }
@@ -188,7 +188,7 @@ function getHostSibling(finishedWork: FiberNode): Instance | null {
 function insertOrAppendPlacementNodeIntoContainer(
 	finishedWork: FiberNode,
 	hostParent: Container,
-	before: Instance | null,
+	before: Instance | null
 ) {
 	const tag = finishedWork.tag;
 	if (tag === HostComponent || tag === HostText) {

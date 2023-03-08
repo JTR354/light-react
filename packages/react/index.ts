@@ -1,7 +1,7 @@
 import {
 	currentDispatcher,
 	Dispatcher,
-	resolveDispatcher
+	resolveDispatcher,
 } from './src/currentDispatcher';
 import { jsxDEV, isValidElement as isValidElementFn, jsx } from './src/jsx';
 
@@ -11,14 +11,14 @@ export const useState: Dispatcher['useState'] = (initState) => {
 };
 
 export const __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = {
-	currentDispatcher
+	currentDispatcher,
 };
 
 const React = {
 	version: '0.0.0',
 	createElementDEV: jsxDEV,
 	createElement: jsx,
-	isValidElement: isValidElementFn
+	isValidElement: isValidElementFn,
 };
 
 export const version = React.version;

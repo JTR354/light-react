@@ -2,7 +2,7 @@ import {
 	HostRoot,
 	HostComponent,
 	HostText,
-	FunctionComponent
+	FunctionComponent,
 } from './workTags';
 import { FiberNode } from './fiber';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';

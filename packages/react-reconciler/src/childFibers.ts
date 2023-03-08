@@ -3,7 +3,7 @@ import { Props, ReactElementType } from 'shared/ReactTypes';
 import {
 	FiberNode,
 	createWorkInProcess,
-	createFiberFromElement
+	createFiberFromElement,
 } from './fiber';
 import { ChildDeletion, Placement } from './fiberFlags';
 import { HostText } from './workTags';

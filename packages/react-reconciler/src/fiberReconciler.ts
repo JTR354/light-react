@@ -5,7 +5,7 @@ import {
 	createUpdate,
 	createUpdateQueue,
 	enqueueUpdate,
-	UpdateQueue
+	UpdateQueue,
 } from './updateQueue';
 import { ReactElementType } from 'shared/ReactTypes';
 import { scheduleUpdateOnFiber } from './workLoop';
