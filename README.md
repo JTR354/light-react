@@ -142,3 +142,11 @@
 
 - getHostSibling
 - insertChildToContainer
+
+### 13 fragment
+
+- isUnKeyedToLevelFragment
+- createFiberFromFragment
+- updateFragment
+- updateFragmentComponent
+- recordHostChildDeletion

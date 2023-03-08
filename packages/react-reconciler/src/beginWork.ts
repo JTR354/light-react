@@ -3,6 +3,7 @@ import {
 	HostComponent,
 	HostText,
 	FunctionComponent,
+	Fragment,
 } from './workTags';
 import { FiberNode } from './fiber';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';
@@ -22,6 +23,8 @@ export function beginWork(fiber: FiberNode) {
 			return null;
 		case FunctionComponent:
 			return updateFunctionComponent(wip);
+		case Fragment:
+			return updateFragmentComponent(wip);
 		default:
 			if (__DEV__) {
 				console.warn('beginWork未实现的fiber类型', fiber);
@@ -29,6 +32,12 @@ export function beginWork(fiber: FiberNode) {
 			break;
 	}
 	return null;
+}
+
+function updateFragmentComponent(wip: FiberNode) {
+	const nextChild = wip.pendingProps;
+	reconcileChildren(wip, nextChild);
+	return wip.child;
 }
 
 function updateFunctionComponent(wip: FiberNode) {

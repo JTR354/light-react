@@ -10,6 +10,7 @@ import {
 	HostText,
 	HostRoot,
 	FunctionComponent,
+	Fragment,
 } from './workTags';
 import { NoFlags, Update } from './fiberFlags';
 // 递归中的归
@@ -60,9 +61,8 @@ export function completeWork(wip: any): any {
 			bubbleProperties(wip);
 			return null;
 		case HostRoot:
-			bubbleProperties(wip);
-			return null;
 		case FunctionComponent:
+		case Fragment:
 			bubbleProperties(wip);
 			return null;
 		default:

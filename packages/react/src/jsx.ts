@@ -1,4 +1,4 @@
-import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
+import { REACT_ELEMENT_TYPE, REACT_FRAGMENT_TYPE } from 'shared/ReactSymbols';
 import { Key, Props, ReactElementType, Ref, Type } from 'shared/ReactTypes';
 
 export const ReactElement = (
@@ -15,6 +15,7 @@ export const ReactElement = (
 		props,
 		__mark__: 'leo',
 	};
+	console.log(element);
 	return element;
 };
 
@@ -85,3 +86,4 @@ export function isValidElement(object: any) {
 		(object as ReactElementType).$$typeof === REACT_ELEMENT_TYPE
 	);
 }
+export const Fragment = REACT_FRAGMENT_TYPE;

@@ -60,6 +60,26 @@ function commitMutationOnFiber(finishedWork: FiberNode) {
 	}
 }
 
+function recordHostChildDeletion(
+	deletions: FiberNode[],
+	unmountFiber: FiberNode
+) {
+	// 1. 找到第一个fiber
+	// 2. 记录第一个fiber的所有sibling
+	const lastOne = deletions[deletions.length - 1];
+	if (lastOne == null) {
+		deletions.push(unmountFiber);
+	} else {
+		let node = lastOne.sibling;
+		while (node != null) {
+			if (node === unmountFiber) {
+				deletions.push(unmountFiber);
+			}
+			node = node.sibling;
+		}
+	}
+}
+
 function commitDeletion(finishedWork: FiberNode) {
 	const { deletions } = finishedWork;
 	if (deletions === null) return;
@@ -67,21 +87,17 @@ function commitDeletion(finishedWork: FiberNode) {
 		console.warn('---ChildrenDeletion begin---', finishedWork);
 	}
 	deletions.forEach((childToDeletion: FiberNode) => {
-		let rootHostNode: FiberNode | null = null;
+		const rootHostChildren: FiberNode[] = [];
 		commitNestedComponent(childToDeletion, (unmountFiber) => {
 			// todo
 			switch (unmountFiber.tag) {
 				case HostComponent:
-					if (rootHostNode === null) {
-						rootHostNode = unmountFiber;
-					}
+					recordHostChildDeletion(rootHostChildren, unmountFiber);
 					// todo 解绑ref
 					break;
 
 				case HostText:
-					if (rootHostNode === null) {
-						rootHostNode = unmountFiber;
-					}
+					recordHostChildDeletion(rootHostChildren, unmountFiber);
 					break;
 				case FunctionComponent:
 					// useEffect unmount 解绑ref
@@ -96,10 +112,12 @@ function commitDeletion(finishedWork: FiberNode) {
 					break;
 			}
 		});
-		if (rootHostNode !== null) {
+		if (rootHostChildren.length) {
 			const hostParent = getHostParent(childToDeletion);
 			if (hostParent !== null) {
-				removeChild(hostParent, (rootHostNode as FiberNode).stateNode);
+				rootHostChildren.forEach((node) => {
+					removeChild(hostParent, node.stateNode);
+				});
 			}
 		}
 		childToDeletion.child = null;

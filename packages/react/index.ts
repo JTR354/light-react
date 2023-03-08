@@ -5,6 +5,7 @@ import {
 } from './src/currentDispatcher';
 import { jsxDEV, isValidElement as isValidElementFn, jsx } from './src/jsx';
 
+export { Fragment } from './src/jsx';
 export const useState: Dispatcher['useState'] = (initState) => {
 	const dispatcher = resolveDispatcher();
 	return dispatcher.useState(initState);

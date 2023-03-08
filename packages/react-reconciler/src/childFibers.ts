@@ -1,12 +1,13 @@
-import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
-import { Props, ReactElementType } from 'shared/ReactTypes';
+import { REACT_ELEMENT_TYPE, REACT_FRAGMENT_TYPE } from 'shared/ReactSymbols';
+import { Key, Props, ReactElementType } from 'shared/ReactTypes';
 import {
 	FiberNode,
 	createWorkInProcess,
 	createFiberFromElement,
+	createFiberFromFragment,
 } from './fiber';
 import { ChildDeletion, Placement } from './fiberFlags';
-import { HostText } from './workTags';
+import { Fragment, HostText } from './workTags';
 
 type ExistingChildren = Map<string | number, FiberNode>;
 
@@ -108,7 +109,19 @@ function ChildFibers(shouldTrackEffects: boolean) {
 				element.key === currentFiber.key &&
 				element.type === currentFiber.type
 			) {
+				if (element.$$typeof !== REACT_ELEMENT_TYPE) {
+					if (__DEV__) {
+						console.warn(reconcileSingleElement.name + '为实现的类型', element);
+						break;
+					}
+				}
 				// 复用
+				let props;
+				if (element.type === REACT_FRAGMENT_TYPE) {
+					props = element.props.children;
+				} else {
+					props = element.props;
+				}
 				const existing = useFiber(currentFiber, element.props);
 				existing.return = returnFiber;
 				// key相同 type相同
@@ -124,7 +137,12 @@ function ChildFibers(shouldTrackEffects: boolean) {
 			currentFiber = currentFiber.sibling;
 		}
 
-		const fiber = createFiberFromElement(element);
+		let fiber;
+		if (element.type === REACT_FRAGMENT_TYPE) {
+			fiber = createFiberFromFragment(element.props.children);
+		} else {
+			fiber = createFiberFromElement(element);
+		}
 		fiber.return = returnFiber;
 		return fiber;
 	}
@@ -160,8 +178,16 @@ function ChildFibers(shouldTrackEffects: boolean) {
 	return function reconcileChildren(
 		returnFiber: FiberNode,
 		currentFiber: FiberNode | null,
-		newChild: ReactElementType
+		newChild: any
 	) {
+		const isKeyedToLevelFragment =
+			newChild &&
+			typeof newChild === 'object' &&
+			newChild.key === null &&
+			newChild.type === REACT_FRAGMENT_TYPE;
+		if (isKeyedToLevelFragment) {
+			newChild = newChild.props.children;
+		}
 		if (Array.isArray(newChild)) {
 			return reconcileChildrenArray(returnFiber, currentFiber, newChild);
 		}
@@ -185,7 +211,7 @@ function ChildFibers(shouldTrackEffects: boolean) {
 		}
 
 		if (currentFiber !== null) {
-			deletionChild(returnFiber, currentFiber);
+			deleteRemainingChildren(returnFiber, currentFiber);
 		}
 
 		if (__DEV__) {
@@ -202,7 +228,7 @@ function updateFromMap(
 	element: any
 ): FiberNode | null {
 	const keyToUse = element?.key ? element.key : index;
-	const before = existingChildren.get(keyToUse);
+	const before = existingChildren.get(keyToUse) || null;
 	if (typeof element === 'number' || typeof element === 'string') {
 		if (before) {
 			if (before.tag === HostText) {
@@ -212,9 +238,27 @@ function updateFromMap(
 			return new FiberNode(HostText, { content: element }, null);
 		}
 	}
+	if (Array.isArray(element)) {
+		return updateFragment(
+			returnFiber,
+			before,
+			element,
+			keyToUse,
+			existingChildren
+		);
+	}
 	if (element !== null && typeof element === 'object') {
 		switch (element.$$typeof) {
 			case REACT_ELEMENT_TYPE:
+				if (element.type === REACT_FRAGMENT_TYPE) {
+					return updateFragment(
+						returnFiber,
+						before,
+						element.props.children,
+						keyToUse,
+						existingChildren
+					);
+				}
 				if (before) {
 					if (before.type === element.type) {
 						existingChildren.delete(keyToUse);
@@ -229,14 +273,29 @@ function updateFromMap(
 				break;
 		}
 	}
-	if (Array.isArray(element)) {
-		// TODO
-		if (__DEV__) {
-			console.warn(updateFromMap.name + '为实现的类型', element);
-		}
+	if (__DEV__) {
+		console.warn(updateFromMap.name + '为实现的类型', element);
 	}
 
 	return null;
+}
+
+function updateFragment(
+	returnFiber: FiberNode,
+	current: FiberNode | null,
+	children: any[],
+	key: string,
+	existingChildren: ExistingChildren
+): FiberNode {
+	let fiber;
+	if (current === null) {
+		fiber = createFiberFromFragment(children);
+	} else {
+		existingChildren.delete(key);
+		fiber = useFiber(current, children);
+	}
+	fiber.return = returnFiber;
+	return fiber;
 }
 
 function useFiber(currentFiber: FiberNode, pendingProps: Props): FiberNode {
