@@ -22,7 +22,7 @@ const React = {
 };
 
 export const version = React.version;
-export const createElement = React.createElement;
+export const createElement = React.createElementDEV;
 export const isValidElement = React.isValidElement;
 
 export default React;

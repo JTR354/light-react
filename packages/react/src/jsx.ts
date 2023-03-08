@@ -37,21 +37,26 @@ export const jsx = (type: Type, config: any, ...maybeChildren: any[]) => {
 	return ReactElement(type, key, ref, props);
 };
 
-export const jsxDEV = (type: Type, config: any) => {
+export const jsxDEV = (type: Type, config: any, ...others: any) => {
 	const {
 		props,
 		key,
 		ref
-	}: { props: { [key: string]: any }; key: any; ref: any } =
-		resolveConfig(config);
+	}: { props: { [key: string]: any }; key: any; ref: any } = resolveConfig(
+		config,
+		others
+	);
 
 	return ReactElement(type, key, ref, props);
 };
 
-function resolveConfig(config: any) {
+function resolveConfig(config: any, others?: any[]) {
 	let key, ref;
 	const props: { [key: string]: any } = {};
 
+	if (Array.isArray(others) && others[0] !== undefined) {
+		key = String(others[0]);
+	}
 	for (const prop in config) {
 		const val = config[prop];
 		if (prop === 'key') {

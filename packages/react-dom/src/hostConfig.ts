@@ -25,6 +25,7 @@ export function insertChildToContainer(
 	before: Instance
 ) {
 	parent.insertBefore(child, before);
+	// parent.insertBefore(before, child);
 }
 export const appendChildToParent = appendInitialChild;
 
