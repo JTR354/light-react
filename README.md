@@ -150,3 +150,19 @@
 - updateFragment
 - updateFragmentComponent
 - recordHostChildDeletion
+
+### 13 batch update
+
+- fiberLanes/
+- mergeLanes
+- requestUpdateLane
+- getHighestPriorityLane
+- markUpdateRootLanes
+- enqueueUpdateQueue
+- processUpdateQueue
+- markRootUpdated
+- ensureRootIsScheduled
+- syncTaskQueue/
+- scheduleSynCallback
+- flushSyncCallbacks
+- scheduleMicroTask

@@ -1,3 +1,4 @@
+import { Lane } from './fiberLanes';
 import {
 	HostRoot,
 	HostComponent,
@@ -12,17 +13,17 @@ import { mountChildFibers, reconcileChildFibers } from './childFibers';
 import { renderWithHooks } from './fiberHooks';
 
 // 递归中的递  比较， 返回子fiberNode
-export function beginWork(fiber: FiberNode) {
+export function beginWork(fiber: FiberNode, updateLane: Lane) {
 	const wip = fiber;
 	switch (wip.tag) {
 		case HostRoot:
-			return updateHostRoot(wip);
+			return updateHostRoot(wip, updateLane);
 		case HostComponent:
 			return updateHostComponent(wip);
 		case HostText:
 			return null;
 		case FunctionComponent:
-			return updateFunctionComponent(wip);
+			return updateFunctionComponent(wip, updateLane);
 		case Fragment:
 			return updateFragmentComponent(wip);
 		default:
@@ -40,8 +41,8 @@ function updateFragmentComponent(wip: FiberNode) {
 	return wip.child;
 }
 
-function updateFunctionComponent(wip: FiberNode) {
-	const nextChild = renderWithHooks(wip);
+function updateFunctionComponent(wip: FiberNode, lane: Lane) {
+	const nextChild = renderWithHooks(wip, lane);
 	reconcileChildren(wip, nextChild);
 	return wip.child;
 }
@@ -53,11 +54,11 @@ function updateHostComponent(wip: FiberNode) {
 	return wip.child;
 }
 
-function updateHostRoot(wip: FiberNode) {
+function updateHostRoot(wip: FiberNode, lane: Lane) {
 	const baseState = wip.memorizedState;
 	const updateQueue = wip.updateQueue as UpdateQueue<typeof baseState>;
 	const pending = updateQueue.shared.pending;
-	const { memorizedState } = processUpdateQueue(baseState, pending);
+	const { memorizedState } = processUpdateQueue(baseState, pending, lane);
 	wip.memorizedState = memorizedState;
 	const nextChild = wip.memorizedState;
 	reconcileChildren(wip, nextChild);

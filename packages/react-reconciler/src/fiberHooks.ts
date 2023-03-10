@@ -2,10 +2,11 @@ import { Dispatch, Dispatcher } from 'react/src/currentDispatcher';
 import internals from 'shared/internals';
 import { Action } from 'shared/ReactTypes';
 import { FiberNode } from './fiber';
+import { requestUpdateLane, NoLane, Lane } from './fiberLanes';
 import {
 	createUpdate,
 	createUpdateQueue,
-	enqueueUpdate,
+	enqueueUpdateQueue,
 	processUpdateQueue,
 	UpdateQueue,
 } from './updateQueue';
@@ -14,6 +15,7 @@ import { scheduleUpdateOnFiber } from './workLoop';
 let currentlyRendingFiber: FiberNode | null = null;
 let workInProcessHook: Hook | null = null;
 let currentHook: Hook | null = null;
+let renderLane: Lane = NoLane;
 
 interface Hook {
 	memorizedState: any;
@@ -21,10 +23,13 @@ interface Hook {
 	next: Hook | null;
 }
 const { currentDispatcher } = internals;
-export function renderWithHooks(wip: FiberNode) {
+export function renderWithHooks(wip: FiberNode, lane: Lane) {
 	currentlyRendingFiber = wip;
-	// // 重置
-	// workInProcessHook = null;
+	renderLane = lane;
+	// 重置
+	wip.memorizedState = null;
+	wip.updateQueue = null;
+
 	const current = wip.alternate;
 	if (current === null) {
 		// mount
@@ -42,6 +47,7 @@ export function renderWithHooks(wip: FiberNode) {
 	currentlyRendingFiber = null;
 	workInProcessHook = null;
 	currentHook = null;
+	lane = NoLane;
 	return children;
 }
 
@@ -58,9 +64,14 @@ function updateState<State>(): [State, Dispatch<State>] {
 	const updateQueue = hook.updateQueue as UpdateQueue<State>;
 	const pending = updateQueue.shared.pending;
 	if (pending !== null) {
-		const { memorizedState } = processUpdateQueue(hook.memorizedState, pending);
+		const { memorizedState } = processUpdateQueue(
+			hook.memorizedState,
+			pending,
+			renderLane
+		);
 		hook.memorizedState = memorizedState;
 	}
+	updateQueue.shared.pending = null;
 	return [hook.memorizedState, updateQueue.dispatch as Dispatch<State>];
 }
 
@@ -132,9 +143,10 @@ function dispatchSetState<State>(
 	updateQueue: UpdateQueue<State>,
 	action: Action<State>
 ) {
-	const update = createUpdate(action);
-	enqueueUpdate(updateQueue, update);
-	scheduleUpdateOnFiber(fiber);
+	const lane = requestUpdateLane();
+	const update = createUpdate(action, lane);
+	enqueueUpdateQueue(updateQueue, update);
+	scheduleUpdateOnFiber(fiber, lane);
 }
 
 function mountWorkInProcess(): Hook {

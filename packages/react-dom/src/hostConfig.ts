@@ -59,3 +59,10 @@ export function removeChild(
 		child = null;
 	}
 }
+
+export const scheduleMicroTask =
+	typeof queueMicrotask === 'function'
+		? queueMicrotask
+		: typeof Promise === 'function'
+		? (callback: (...args: any) => any) => Promise.resolve(null).then(callback)
+		: window.setTimeout;

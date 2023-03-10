@@ -15,7 +15,7 @@ export const ReactElement = (
 		props,
 		__mark__: 'leo',
 	};
-	console.log(element);
+	// console.log(element);
 	return element;
 };
 

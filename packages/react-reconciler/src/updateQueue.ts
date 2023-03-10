@@ -1,8 +1,11 @@
 import { Dispatch } from 'react/src/currentDispatcher';
 import { Action } from 'shared/ReactTypes';
+import { Lane } from './fiberLanes';
 
 export interface Update<State> {
 	action: Action<State>;
+	lane: Lane;
+	next: Update<any> | null;
 }
 export interface UpdateQueue<State> {
 	shared: {
@@ -11,9 +14,14 @@ export interface UpdateQueue<State> {
 	dispatch: Dispatch<State> | null;
 }
 
-export const createUpdate = <State>(action: Action<State>): Update<State> => {
+export const createUpdate = <State>(
+	action: Action<State>,
+	lane: Lane
+): Update<State> => {
 	return {
 		action,
+		lane,
+		next: null,
 	};
 };
 
@@ -26,28 +34,48 @@ export const createUpdateQueue = <State>(): UpdateQueue<State> => {
 	};
 };
 
-export const enqueueUpdate = <State>(
+export const enqueueUpdateQueue = <State>(
 	updateQueue: UpdateQueue<State>,
 	update: Update<State>
 ) => {
+	const pending = updateQueue.shared.pending;
+	if (pending === null) {
+		update.next = update;
+	} else {
+		update.next = pending.next;
+		pending.next = update;
+	}
 	updateQueue.shared.pending = update;
 };
 
 export const processUpdateQueue = <State>(
 	baseState: State,
-	pendingUpdate: Update<State> | null
+	pendingUpdate: Update<State> | null,
+	renderLane: Lane
 ): { memorizedState: State } => {
 	const result: ReturnType<typeof processUpdateQueue<State>> = {
 		memorizedState: baseState,
 	};
 	if (pendingUpdate !== null) {
-		const action = pendingUpdate.action;
-		if (action instanceof Function) {
-			result.memorizedState = action(baseState);
-		} else {
-			result.memorizedState = action;
-		}
+		const first = pendingUpdate.next;
+		let pending = pendingUpdate.next;
+		do {
+			if (pending === null) break;
+			if (pending.lane === renderLane) {
+				const action = pending?.action;
+				if (action instanceof Function) {
+					baseState = action(baseState);
+				} else {
+					baseState = action;
+				}
+			} else {
+				if (__DEV__) {
+					console.error(processUpdateQueue.name, pending.lane, renderLane);
+				}
+			}
+			pending = pending.next;
+		} while (pending !== first);
 	}
-
+	result.memorizedState = baseState;
 	return result;
 };
