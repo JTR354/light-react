@@ -8,14 +8,27 @@ import {
 import { HostRoot } from './workTags';
 import { beginWork } from './beginWork';
 import { completeWork } from './completeWork';
-import { createWorkInProcess, FiberNode, FiberRootNode } from './fiber';
-import { MutationMask } from './fiberFlags';
-import { commitMutationEffects } from './commitWork';
+import {
+	createWorkInProcess,
+	FiberNode,
+	FiberRootNode,
+	PendingPassiveEffects,
+} from './fiber';
+import { MutationMask, PassiveMask } from './fiberFlags';
+import {
+	commitHookEffectListCreate,
+	commitHookEffectListDestroy,
+	commitHookEffectListUnmount,
+	commitMutationEffects,
+} from './commitWork';
 import { flushSyncCallbacks, scheduleSyncCallback } from './syncTaskQueue';
 import { scheduleMicroTask } from 'hostConfig';
+import { unstable_NormalPriority, unstable_scheduleCallback } from 'scheduler';
+import { Passive, HookHasEffect } from './hookEffectTags';
 
 let workInProcess: FiberNode | null = null;
 let wipRootRenderLane: Lane = NoLane;
+let rootDoesHasPassiveEffect = false;
 
 export function scheduleUpdateOnFiber(fiber: FiberNode, lane: Lane) {
 	const root = markUpdateFromFiberToRoot(fiber);
@@ -108,6 +121,21 @@ function commitWork(root: FiberRootNode) {
 	root.finishedLanes = NoLane;
 	root.pendingLanes ^= lane;
 
+	if (
+		finishedWork.flags & PassiveMask ||
+		finishedWork.subTreeFlags & PassiveMask
+	) {
+		if (!rootDoesHasPassiveEffect) {
+			rootDoesHasPassiveEffect = true;
+			// 调度副作用
+			unstable_scheduleCallback(unstable_NormalPriority, () => {
+				// 执行副作用
+				flushPassiveEffects(root.pendingPassiveEffects);
+				return;
+			});
+		}
+	}
+
 	const subTreeHasEffect = finishedWork.subTreeFlags & MutationMask;
 	const rootHasEffect = finishedWork.flags & MutationMask;
 
@@ -115,11 +143,32 @@ function commitWork(root: FiberRootNode) {
 		// beforeMutation
 		// mutation
 		// layout
-		commitMutationEffects(finishedWork);
+		commitMutationEffects(finishedWork, root);
 		root.current = finishedWork;
 	} else {
 		root.current = finishedWork;
 	}
+
+	rootDoesHasPassiveEffect = false;
+	ensureRootIsScheduled(root);
+}
+
+function flushPassiveEffects(pendingPassiveEffect: PendingPassiveEffects) {
+	const { update, unmount } = pendingPassiveEffect;
+	unmount.forEach((effect) => {
+		commitHookEffectListUnmount(Passive, effect);
+	});
+	pendingPassiveEffect.unmount = [];
+
+	update.forEach((effect) => {
+		commitHookEffectListDestroy(Passive | HookHasEffect, effect);
+	});
+	update.forEach((effect) => {
+		commitHookEffectListCreate(Passive | HookHasEffect, effect);
+	});
+	pendingPassiveEffect.update = [];
+
+	flushSyncCallbacks();
 }
 
 function workLoop() {

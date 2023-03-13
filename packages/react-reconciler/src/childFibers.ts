@@ -235,8 +235,8 @@ function updateFromMap(
 				existingChildren.delete(keyToUse);
 				return useFiber(before, { content: element });
 			}
-			return new FiberNode(HostText, { content: element }, null);
 		}
+		return new FiberNode(HostText, { content: element }, null);
 	}
 	if (Array.isArray(element)) {
 		return updateFragment(
