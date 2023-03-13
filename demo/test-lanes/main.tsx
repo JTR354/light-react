@@ -23,12 +23,12 @@ const App = () => {
 			<ul>
 				<button
 					onClickCapture={() => {
-						// setNum((num) => num + 1);
-						// setNum((num) => num + 1);
-						setNum((num) => num + 10);
-						setNum(num + 1);
-						setNum(num + 1);
-						setNum(num + 1);
+						setNum((num) => num + 1);
+						setNum((num) => num + 1);
+						setNum((num) => num + 1);
+						// setNum(num + 1);
+						// setNum(num + 1);
+						// setNum(num + 1);
 					}}>
 					add num
 				</button>
