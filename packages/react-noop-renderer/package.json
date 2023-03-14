@@ -1,7 +1,7 @@
 {
-	"name": "react-dom",
+	"name": "react-noop-renderer",
 	"version": "1.0.0",
-	"description": "react浏览器环境",
+	"description": "react noop 渲染器",
 	"module": "index.ts",
 	"dependencies": {
 		"shared": "workspace:*",

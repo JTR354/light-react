@@ -6,7 +6,7 @@ import { getBasePlugins, getDistPath, getPkgJson, getPkgPath } from './utils';
 import generatePackageJson from 'rollup-plugin-generate-package-json';
 import alias from '@rollup/plugin-alias';
 
-const { name, module, peerDependencies } = getPkgJson('react-dom');
+const { name, module, peerDependencies } = getPkgJson('react-noop-renderer');
 const sourcePath = getPkgPath(name);
 const distPath = getDistPath(name);
 
@@ -16,17 +16,8 @@ export default [
 		output: [
 			{
 				file: `${distPath}/index.js`,
-				name: 'ReactDOM',
+				name: 'ReactNoopRenderer',
 				exports: 'named',
-				format: 'umd',
-				globals: {
-					react: 'React',
-					scheduler: 'Scheduler',
-				},
-			},
-			{
-				file: `${distPath}/client.js`,
-				name: 'client',
 				format: 'umd',
 				globals: {
 					react: 'React',
@@ -41,7 +32,18 @@ export default [
 					hostConfig: `${sourcePath}/src/hostConfig.ts`,
 				},
 			}),
-			...getBasePlugins(),
+			...getBasePlugins({
+				typescript: {
+					exclude: ['./packages/react-dom/**/*'],
+					tsconfigOverride: {
+						compilerOptions: {
+							paths: {
+								hostConfig: [`${sourcePath}/src/hostConfig.ts`],
+							},
+						},
+					},
+				},
+			}),
 			generatePackageJson({
 				inputFolder: sourcePath,
 				outputFolder: distPath,
@@ -52,26 +54,12 @@ export default [
 						description,
 						main: 'index.js',
 						peerDependencies: {
+							...peerDependencies,
 							react: version,
 						},
 					};
 				},
 			}),
 		],
-	},
-	{
-		input: `${sourcePath}/test-utils.ts`,
-		output: [
-			{
-				file: `${distPath}/test-utils.js`,
-				name: 'test-utils',
-				format: 'umd',
-				globals: {
-					'react-dom': 'reactDom',
-				},
-			},
-		],
-		external: ['react', 'react-dom'],
-		plugins: [...getBasePlugins()],
 	},
 ];

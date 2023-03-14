@@ -13,8 +13,8 @@ export default defineConfig({
 				replacement: getPkgPath('react'),
 			},
 			{
-				find: 'react-dom',
-				replacement: getPkgPath('react-dom'),
+				find: 'react-noop-renderer',
+				replacement: getPkgPath('react-noop-renderer'),
 			},
 			{
 				find: 'react-reconciler',
@@ -26,7 +26,7 @@ export default defineConfig({
 			},
 			{
 				find: 'hostConfig',
-				replacement: `${getPkgPath('react-dom')}/src/hostConfig.ts`,
+				replacement: `${getPkgPath('react-noop-renderer')}/src/hostConfig.ts`,
 			},
 		],
 	},

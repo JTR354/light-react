@@ -2,9 +2,9 @@ import { FiberNode } from './fiber';
 import {
 	createTextInstance,
 	appendInitialChild,
-	updateFiberProps,
+	// updateFiberProps,
 } from 'hostConfig';
-import { createInstance, Container } from 'hostConfig';
+import { createInstance, Container, Instance } from 'hostConfig';
 import {
 	HostComponent,
 	HostText,
@@ -21,7 +21,8 @@ export function completeWork(wip: any): any {
 	switch (wip.tag) {
 		case HostComponent:
 			if (current !== null && wip.stateNode) {
-				updateFiberProps(current.stateNode, newProps);
+				// updateFiberProps(current.stateNode, newProps);
+				markUpdate(wip);
 				// update TODO
 				// const oldProps = current.memorizedProps;
 				// let isEqual = false;
@@ -93,7 +94,7 @@ function bubbleProperties(wip: FiberNode) {
 	wip.subTreeFlags |= subTreeFlags;
 }
 
-function appendAllChildren(instance: Container, wip: FiberNode) {
+function appendAllChildren(instance: Container | Instance, wip: FiberNode) {
 	// Implement
 	let node = wip.child;
 
