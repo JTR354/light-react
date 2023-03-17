@@ -1,0 +1,20 @@
+span {
+	word-break: break-all;
+}
+
+button {
+	margin-right: 1rem;
+}
+
+.pri-1 {
+	color: greenyellow;
+}
+.pri-2 {
+	color: pink;
+}
+.pri-3 {
+	color: orange;
+}
+.pri-4 {
+	color: black;
+}

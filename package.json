@@ -8,7 +8,8 @@
 		"lint": "eslint --ext .ts,.jsx,.tsx --fix --quiet ./packages",
 		"build:dev": " rimraf dist && rollup --bundleConfigAsCjs --config=scripts/rollup/dev.config.ts --configPlugin=@rollup/plugin-typescript",
 		"demo": "vite serve demo/test-effect --config=scripts/vite/vite.config.ts --force",
-		"demo-noop": "vite serve demo/test-noop --config=scripts/vite/vite-noop.config.ts --force"
+		"demo-noop": "vite serve demo/test-noop --config=scripts/vite/vite-noop.config.ts --force",
+		"demo-async": "vite serve demo/test-async --config=scripts/vite/vite.config.ts --force"
 	},
 	"keywords": [],
 	"author": "",

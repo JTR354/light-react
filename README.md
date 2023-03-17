@@ -151,7 +151,7 @@
 - updateFragmentComponent
 - recordHostChildDeletion
 
-### 13 batch update
+### 14 batch update
 
 - fiberLanes/
 - mergeLanes
@@ -166,3 +166,9 @@
 - scheduleSynCallback
 - flushSyncCallbacks
 - scheduleMicroTask
+
+### 15 useEffect
+
+### 16 react noop renderer
+
+### 17 async work
