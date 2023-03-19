@@ -10,6 +10,7 @@ import {
 	createUpdateQueue,
 	enqueueUpdateQueue,
 	processUpdateQueue,
+	Update,
 	UpdateQueue,
 } from './updateQueue';
 import { scheduleUpdateOnFiber } from './workLoop';
@@ -23,6 +24,8 @@ interface Hook {
 	memorizedState: any;
 	updateQueue: unknown;
 	next: Hook | null;
+	baseState: any;
+	baseQueue: Update<any> | null;
 }
 const { currentDispatcher } = internals;
 export function renderWithHooks(wip: FiberNode, lane: Lane) {
@@ -171,16 +174,40 @@ function areHookInputsEqual(d1: EffectDeps, d2: EffectDeps) {
 
 function updateState<State>(): [State, Dispatch<State>] {
 	const hook = updateWorkInProcess();
+	const baseState = hook.baseState;
 	const updateQueue = hook.updateQueue as UpdateQueue<State>;
 	const pending = updateQueue.shared.pending;
-	updateQueue.shared.pending = null;
+	const current = currentHook as Hook;
+	let baseQueue = current.baseQueue;
+	// updateQueue.shared.pending = null;
 	if (pending !== null) {
-		const { memorizedState } = processUpdateQueue(
-			hook.memorizedState,
-			pending,
-			renderLane
-		);
-		hook.memorizedState = memorizedState;
+		// const { memorizedState } = processUpdateQueue(
+		// 	hook.memorizedState,
+		// 	pending,
+		// 	renderLane
+		// );
+		// hook.memorizedState = memorizedState;
+		if (baseQueue !== null) {
+			//
+			const baseFirst = baseQueue.next;
+			const pendingFirst = pending.next;
+			baseQueue.next = pendingFirst;
+			pending.next = baseFirst;
+		}
+		baseQueue = pending;
+		current.baseQueue = pending;
+		updateQueue.shared.pending = null;
+		if (baseQueue !== null) {
+			//
+			const {
+				memorizedState,
+				baseState: newBaseState,
+				baseQueue: newBaseQueue,
+			} = processUpdateQueue(baseState, baseQueue, renderLane);
+			hook.memorizedState = memorizedState;
+			hook.baseState = newBaseState;
+			hook.baseQueue = newBaseQueue;
+		}
 	}
 	return [hook.memorizedState, updateQueue.dispatch as Dispatch<State>];
 }
@@ -207,6 +234,8 @@ function updateWorkInProcess(): Hook {
 		memorizedState: currentHook.memorizedState,
 		updateQueue: currentHook.updateQueue,
 		next: null,
+		baseState: currentHook.baseState,
+		baseQueue: currentHook.baseQueue,
 	};
 
 	if (workInProcessHook === null) {
@@ -264,6 +293,8 @@ function mountWorkInProcess(): Hook {
 		next: null,
 		memorizedState: null,
 		updateQueue: null,
+		baseQueue: null,
+		baseState: null,
 	};
 	if (workInProcessHook === null) {
 		if (currentlyRendingFiber === null) {

@@ -1,4 +1,5 @@
 import { Container } from 'hostConfig';
+import { CallbackNode } from 'scheduler';
 import { Key, Props, ReactElementType, Ref } from 'shared/ReactTypes';
 import { Flags, NoFlags } from './fiberFlags';
 import { Effect } from './fiberHooks';
@@ -65,16 +66,20 @@ export class FiberRootNode {
 	container: Container;
 	current: FiberNode;
 	finishedWork: FiberNode | null;
-	finishedLanes: Lane;
+	finishedLane: Lane;
 	pendingLanes: Lanes;
 	pendingPassiveEffects: PendingPassiveEffects;
+	callbackNode: CallbackNode | null;
+	callbackPriority: Lane;
 	constructor(container: Container, hostRootFiber: FiberNode) {
 		this.container = container;
 		this.current = hostRootFiber;
 		hostRootFiber.stateNode = this;
 		this.finishedWork = null;
-		this.finishedLanes = NoLane;
+		this.finishedLane = NoLane;
 		this.pendingLanes = NoLanes;
+		this.callbackNode = null;
+		this.callbackPriority = NoLane;
 		this.pendingPassiveEffects = {
 			unmount: [],
 			update: [],

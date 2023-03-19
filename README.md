@@ -172,3 +172,11 @@
 ### 16 react noop renderer
 
 ### 17 async work
+
+### 18 async update of events
+
+- eventTypeToSchedulePriority
+- lanesToSchedulePriority
+- schedulePriorityToLane
+- InputContinuousLane
+- DefaultLane
