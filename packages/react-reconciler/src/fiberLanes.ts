@@ -1,3 +1,4 @@
+import ReactCurrentBatchConfig from 'react/src/currentBatchConfig';
 import {
 	unstable_getCurrentPriorityLevel,
 	unstable_IdlePriority,
@@ -14,13 +15,18 @@ export const NoLane = 0;
 export const SyncLane = 1;
 export const InputContinuesLane = 1 << 1;
 export const DefaultLane = 1 << 2;
-export const IdleLane = 1 << 3;
+export const TransitionLane = 1 << 3;
+export const IdleLane = 1 << 8;
 
 export function mergeLanes(lane1: Lane, lane2: Lane) {
 	return lane1 | lane2;
 }
 
 export function requestUpdateLane() {
+	const isTransition = ReactCurrentBatchConfig.transition;
+	if (isTransition !== null) {
+		return TransitionLane;
+	}
 	const currentPriority = unstable_getCurrentPriorityLevel();
 	const lane = schedulePriorityToLane(currentPriority);
 	return lane;

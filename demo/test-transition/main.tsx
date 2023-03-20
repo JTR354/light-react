@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 
-import { useState } from 'react';
-// import { useState, useTransition } from 'react';
+// import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import TabButton from './TabButton';
 import AboutTab from './AboutTab';
 import PostsTab from './PostsTab';
@@ -10,13 +10,13 @@ import './style.css';
 import React from 'react';
 
 function App() {
-	// const [isPending, startTransition] = useTransition();
+	const [isPending, startTransition] = useTransition();
 	const [tab, setTab] = useState('about');
 	console.log('hello');
 	function selectTab(nextTab) {
-		// startTransition(() => {
-		setTab(nextTab);
-		// });
+		startTransition(() => {
+			setTab(nextTab);
+		});
 	}
 
 	return (
@@ -40,6 +40,7 @@ function App() {
 	);
 }
 
-const root = ReactDOM.createRoot(document.querySelector('#root'));
+// @ts-ignore
+const root = ReactDOM.createRoot(document.querySelector('#root') as Element);
 
 root.render(<App />);
